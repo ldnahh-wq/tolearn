@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>أ. ابتسام حكمي | تعلم البرمجة والذكاء الاصطناعي</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background: linear-gradient(145deg, #f0f4ff 0%, #e9eefa 100%);
+            color: #1e2a3e;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        /* الهيدر الخاص بالمعلمة */
+        .teacher-header {
+            background: linear-gradient(135deg, #0b2b44, #1b4a6e);
+            border-radius: 32px;
+            padding: 1.5rem 2rem;
+            margin-bottom: 2rem;
+            color: white;
+            text-align: center;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+        }
+        .teacher-header h1 {
+            font-size: 2rem;
+            margin-bottom: 0.3rem;
+        }
+        .teacher-header h1 i {
+            margin-left: 12px;
+            color: #ffd966;
+        }
+        .teacher-header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        /* أزرار الفصول */
+        .classes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+        .class-card {
+            background: white;
+            border-radius: 28px;
+            padding: 1.8rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+        .class-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 30px rgba(0,0,0,0.12);
+            background: #fff9ef;
+        }
+        .class-icon {
+            font-size: 3rem;
+            color: #2c7da0;
+            margin-bottom: 1rem;
+        }
+        .class-card h3 {
+            font-size: 1.6rem;
+            color: #0f4c5f;
+            margin-bottom: 0.5rem;
+        }
+        .class-card p {
+            color: #5a6e7c;
+            font-size: 0.95rem;
+        }
+        /* صفحة الأسئلة */
+        .quiz-page {
+            display: none;
+            background: rgba(255,255,255,0.95);
+            border-radius: 48px;
+            padding: 2rem;
+            box-shadow: 0 25px 45px rgba(0,0,0,0.1);
+        }
+        .quiz-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #e2e8f0;
+        }
+        .back-home {
+            background: #6c757d;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 40px;
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .score-area {
+            background: #1e4663;
+            color: white;
+            padding: 8px 18px;
+            border-radius: 40px;
+            font-weight: bold;
+        }
+        .question-card {
+            background: #f9fafc;
+            border-radius: 32px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid #e2e8f0;
+        }
+        .question-text {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 1.2rem;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        .q-num {
+            background: #2c7da0;
+            color: white;
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 1rem;
+        }
+        .option-item {
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 60px;
+            padding: 12px 20px;
+            cursor: pointer;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .option-item:hover {
+            background: #eef2ff;
+            border-color: #a0c4ff;
+        }
+        .option-item.selected {
+            background: #d9eef7;
+            border-color: #2c7da0;
+        }
+        .opt-letter {
+            width: 32px;
+            height: 32px;
+            background: #cbd5e1;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+        .feedback {
+            margin-top: 10px;
+            padding: 8px 15px;
+            border-radius: 28px;
+            display: inline-block;
+        }
+        .feedback.correct {
+            background: #c8f0d1;
+            color: #176f2c;
+        }
+        .feedback.wrong {
+            background: #ffe0db;
+            color: #b91c1c;
+        }
+        .check-btn {
+            background: #ff9f4a;
+            border: none;
+            padding: 8px 24px;
+            border-radius: 40px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 8px;
+            color: white;
+        }
+        .reset-stage {
+            background: #6c757d;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 40px;
+            color: white;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        .competition-btn {
+            background: #e67e22;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 60px;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 20px 0;
+        }
+        .comp-result {
+            margin-top: 15px;
+            font-weight: bold;
+        }
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            color: #4b6a8b;
+        }
+        @media (max-width: 700px) {
+            .quiz-page { padding: 1.2rem; }
+            .question-text { font-size: 1.1rem; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <!-- الهيدر الثابت باسم المعلمة -->
+    <div class="teacher-header">
+        <h1><i class="fas fa-chalkboard-teacher"></i> أ. ابتسام حكمي</h1>
+        <p>معلمة المهارات الرقمية والتقنية الرقمية | تعلم البرمجة والذكاء الاصطناعي بأسئلة تفاعلية</p>
+    </div>
+
+    <!-- الصفحة الرئيسية: عرض جميع الفصول -->
+    <div id="homePage">
+        <div class="classes-grid">
+            <div class="class-card" data-stage="middle1">
+                <div class="class-icon"><i class="fas fa-graduation-cap"></i></div>
+                <h3>📘 أول متوسط</h3>
+                <p>أساسيات بايثون - المتغيرات، الطباعة، البيانات</p>
+            </div>
+            <div class="class-card" data-stage="middle2">
+                <div class="class-icon"><i class="fas fa-code"></i></div>
+                <h3>⚙️ ثاني متوسط</h3>
+                <p>الشروط والحلقات في بايثون</p>
+            </div>
+            <div class="class-card" data-stage="middle3">
+                <div class="class-icon"><i class="fas fa-rocket"></i></div>
+                <h3>🚀 ثالث متوسط</h3>
+                <p>الدوال والمكتبات في بايثون</p>
+            </div>
+            <div class="class-card" data-stage="high1">
+                <div class="class-icon"><i class="fas fa-microchip"></i></div>
+                <h3>🧠 أول ثانوي</h3>
+                <p>مدخل إلى الذكاء الاصطناعي</p>
+            </div>
+            <div class="class-card" data-stage="high2">
+                <div class="class-icon"><i class="fas fa-brain"></i></div>
+                <h3>🤖 ثاني ثانوي</h3>
+                <p>مفاهيم متقدمة في الذكاء الاصطناعي</p>
+            </div>
+            <div class="class-card" data-stage="high3">
+                <div class="class-icon"><i class="fas fa-robot"></i></div>
+                <h3>🧬 ثالث ثانوي</h3>
+                <p>مستقبل الذكاء الاصطناعي والتطبيقات</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- صفحة الأسئلة الخاصة بكل فصل (مخفية مبدئياً) -->
+    <div id="quizPage" class="quiz-page">
+        <div class="quiz-header">
+            <button class="back-home" id="backHomeBtn"><i class="fas fa-arrow-right"></i> العرض الرئيسي</button>
+            <div class="score-area" id="quizScore">⭐ النقاط: 0</div>
+        </div>
+        <h2 id="stageTitle" style="color:#0f4c5f; margin-bottom: 20px;"></h2>
+        <div id="questionsList"></div>
+        <button class="reset-stage" id="resetStageBtn"><i class="fas fa-sync-alt"></i> إعادة الاختبار</button>
+        <div style="text-align: center;">
+            <button class="competition-btn" id="startCompetitionBtn"><i class="fas fa-trophy"></i> 🏆 ابدأ المسابقة (بعد إكمال الأسئلة)</button>
+        </div>
+        <div id="compResultArea" class="comp-result"></div>
+    </div>
+    <footer>✨ كل سؤال يعطيك تغذية راجعة فورية | صح وخطأ | اجمع النقاط وتأهل للمسابقة ✨</footer>
+</div>
+
+<script>
+    // ======================= قاعدة الأسئلة الكاملة لكل فصل =======================
+    const questionsDB = {
+        middle1: {
+            title: "📘 أول متوسط - أساسيات بايثون",
+            questions: [
+                { text: "ما هي الدالة المستخدمة لطباعة النص في بايثون؟", options: ["print()", "input()", "output()", "write()"], correct: 0 },
+                { text: "كيف تكتب تعليقاً في بايثون؟", options: ["// تعليق", "/* تعليق */", "# تعليق", "<!-- تعليق -->"], correct: 2 },
+                { text: "أي من هذه القيم تمثل عدداً صحيحاً؟", options: ["'10'", "10.5", "10", "True"], correct: 2 },
+                { text: "ما هو مخرج الكود التالي: print(5 + 3 * 2)", options: ["16", "11", "13", "10"], correct: 1 },
+                { text: "أي كلمة مفتاحية تُستخدم لتعريف متغير في بايثون؟", options: ["var", "let", "int", "لا نحتاج كلمة، نكتب الاسم فقط"], correct: 3 },
+                { text: "ما نوع البيانات الذي يمثل النصوص في بايثون؟", options: ["int", "float", "str", "bool"], correct: 2 },
+                { text: "كيف نطلب من المستخدم إدخال قيمة في بايثون؟", options: ["input()", "scan()", "read()", "get()"], correct: 0 },
+                { text: "أي من هذه العوامل يستخدم للجمع؟", options: ["+", "-", "*", "/"], correct: 0 },
+                { text: "ما قيمة المتغير x بعد تنفيذ: x = 10; x = x + 5", options: ["10", "15", "5", "20"], correct: 1 },
+                { text: "أي من هذه الكلمات مفتاحية محجوزة في بايثون؟", options: ["if", "start", "begin", "main"], correct: 0 }
+            ]
+        },
+        middle2: {
+            title: "⚙️ ثاني متوسط - الشروط والحلقات",
+            questions: [
+                { text: "ما الكلمة المفتاحية للجملة الشرطية 'إذا'؟", options: ["if", "when", "case", "for"], correct: 0 },
+                { text: "حلقة 'for' تستخدم لـ ...", options: ["التكرار لعدد محدد", "التكرار الشرطي", "إنشاء دالة", "طباعة البيانات"], correct: 0 },
+                { text: "ماذا يفعل الكود: while x < 5: x += 1", options: ["حلقة لا نهائية", "يزيد x حتى 5", "يطبع x", "خطأ"], correct: 1 },
+                { text: "أي من هذه العوامل يستخدم للمقارنة (يساوي)؟", options: ["=", "==", "!=", "<>"], correct: 1 },
+                { text: "ماذا نستخدم لإنشاء قائمة في بايثون؟", options: ["[]", "{}", "()", "<>"], correct: 0 },
+                { text: "كيف نكتب شرط 'أكبر من أو يساوي'؟", options: [">=", "<=", ">", "<"], correct: 0 },
+                { text: "ماذا يفعل الأمر 'break' في الحلقات؟", options: ["يخرج من الحلقة", "يكمل الحلقة", "يوقف البرنامج", "يعيد التشغيل"], correct: 0 },
+                { text: "أي حلقة تنفذ طالما الشرط صحيح؟", options: ["for", "while", "do-while", "loop"], correct: 1 },
+                { text: "كيف نضيف عنصر '5' إلى قائمة 'nums'؟", options: ["nums.add(5)", "nums.append(5)", "nums.insert(5)", "nums.push(5)"], correct: 1 },
+                { text: "ماذا يرجع range(3)؟", options: ["[0,1,2]", "[1,2,3]", "[0,1,2,3]", "[1,2]"], correct: 0 }
+            ]
+        },
+        middle3: {
+            title: "🚀 ثالث متوسط - دوال ومكتبات",
+            questions: [
+                { text: "كيف نعرف دالة في بايثون؟", options: ["function myFunc():", "def myFunc():", "define myFunc():", "new myFunc():"], correct: 1 },
+                { text: "أي من هذه مكتبات بايثون تستخدم للرياضيات؟", options: ["math", "random", "turtle", "os"], correct: 0 },
+                { text: "ماذا ترجع الدالة range(3) ؟", options: ["[0,1,2]", "[1,2,3]", "[0,1,2,3]", "[1,2]"], correct: 0 },
+                { text: "كيف نضيف عنصر إلى قائمة؟", options: ["append()", "add()", "insert()", "push()"], correct: 0 },
+                { text: "أي من هذه هي جملة استيراد لمكتبة بايثون؟", options: ["import math", "using math", "include math", "require math"], correct: 0 },
+                { text: "ما الكلمة المفتاحية لإرجاع قيمة من دالة؟", options: ["return", "output", "result", "back"], correct: 0 },
+                { text: "كيف نستدعي دالة اسمها 'تحية'؟", options: ["call تحية()", "تحية()", "run تحية", "execute تحية"], correct: 1 },
+                { text: "أي من هذه مكتبات لإنشاء واجهات رسومية؟", options: ["tkinter", "numpy", "pandas", "matplotlib"], correct: 0 },
+                { text: "ما فائدة الدوال في البرمجة؟", options: ["تنظيم الكود وإعادة الاستخدام", "جعل الكود أطول", "تعقيد البرنامج", "لا فائدة"], correct: 0 },
+                { text: "كيف نكتب دالة لا ترجع قيمة؟", options: ["void", "None", "empty", "no return"], correct: 1 }
+            ]
+        },
+        high1: {
+            title: "🧠 أول ثانوي - مدخل إلى الذكاء الاصطناعي",
+            questions: [
+                { text: "ما المقصود بالذكاء الاصطناعي؟", options: ["محاكاة الذكاء البشري بواسطة الآلات", "برمجة عادية", "صناعة الروبوتات فقط", "تحليل البيانات"], correct: 0 },
+                { text: "أي من هذه تطبيقات الذكاء الاصطناعي؟", options: ["المساعدات الصوتية", "الآلة الحاسبة", "محرر النصوص", "البريد الإلكتروني"], correct: 0 },
+                { text: "ما هو التعلم الآلي (Machine Learning)؟", options: ["فرع من AI يتعلم من البيانات", "تصميم الدوائر", "لغة برمجة", "نظام تشغيل"], correct: 0 },
+                { text: "أي من هذه ليست لغة برمجة للذكاء الاصطناعي؟", options: ["Python", "R", "HTML", "Julia"], correct: 2 },
+                { text: "ماذا تعني كلمة 'خوارزمية' في الذكاء الاصطناعي؟", options: ["مجموعة خطوات لحل مشكلة", "نوع من البيانات", "شيفرة خبيثة", "جهاز حاسوب"], correct: 0 },
+                { text: "ما هو ChatGPT؟", options: ["نموذج محادثة ذكي", "لغة برمجة", "نظام تشغيل", "قاعدة بيانات"], correct: 0 },
+                { text: "أي مجال يستخدم AI للتعرف على الوجوه؟", options: ["الرؤية الحاسوبية", "معالجة النصوص", "تحليل الصوت", "الأمن السيبراني"], correct: 0 },
+                { text: "ما هو 'البيانات الضخمة' (Big Data)؟", options: ["كميات هائلة من البيانات", "ملفات صغيرة", "قاعدة بيانات بسيطة", "بيانات غير مهمة"], correct: 0 },
+                { text: "ما فائدة الذكاء الاصطناعي في الطب؟", options: ["تشخيص الأمراض", "تصنيع الأدوية فقط", "الجراحة فقط", "لا فائدة"], correct: 0 },
+                { text: "من مؤسس مجال الذكاء الاصطناعي الحديث؟", options: ["آلان تورنغ", "بيل غيتس", "ستيف جوبز", "مارك زوكربيرغ"], correct: 0 }
+            ]
+        },
+        high2: {
+            title: "🤖 ثاني ثانوي - مفاهيم متقدمة في الذكاء الاصطناعي",
+            questions: [
+                { text: "ما هو 'التعلم العميق' (Deep Learning)؟", options: ["فرع من التعلم الآلي يستخدم شبكات عصبية عميقة", "تعلم سطحي", "حفظ المعلومات", "تحليل النصوص"], correct: 0 },
+                { text: "أي من هذه أمثلة على معالجة اللغة الطبيعية (NLP)؟", options: ["ترجمة جوجل", "ألعاب الفيديو", "جداول الإكسل", "قواعد البيانات"], correct: 0 },
+                { text: "ما هي 'الرؤية الحاسوبية' (Computer Vision)؟", options: ["تمكين الحاسوب من رؤية وفهم الصور", "تحسين شاشات العرض", "برمجة العيون", "تصميم الكاميرات"], correct: 0 },
+                { text: "أي من هذه يعتبر تحدي للذكاء الاصطناعي؟", options: ["التحيز في البيانات", "سرعة الحاسوب", "كثرة البرامج", "الذاكرة"], correct: 0 },
+                { text: "ما اسم أشهر مكتبة بايثون للتعلم العميق؟", options: ["TensorFlow", "Pandas", "Matplotlib", "Flask"], correct: 0 },
+                { text: "ما هو 'التعلم المعزز' (Reinforcement Learning)؟", options: ["التعلم من خلال المكافآت والعقوبات", "التعلم من البيانات المصنفة", "التعلم بدون بيانات", "التعلم من الصور"], correct: 0 },
+                { text: "ما معنى 'الشبكة العصبية' (Neural Network)؟", options: ["نموذج يحاكي الدماغ البشري", "دائرة كهربائية", "خوارزمية فرز", "قاعدة بيانات"], correct: 0 },
+                { text: "أي من هذه تطبيقات الذكاء الاصطناعي في السيارات؟", options: ["القيادة الذاتية", "تحسين المحرك", "أنظمة الصوت", "الإطارات"], correct: 0 },
+                { text: "ما هو 'تحليل المشاعر' (Sentiment Analysis)؟", options: ["فهم العواطف من النصوص", "تحليل الصور", "تحليل الفيديو", "تحليل الصوت"], correct: 0 },
+                { text: "ما هي 'أخلاقيات الذكاء الاصطناعي'؟", options: ["ضمان استخدام AI بشكل مسؤول وعادل", "قوانين البرمجة", "تصميم الروبوتات", "سرعة المعالجة"], correct: 0 }
+            ]
+        },
+        high3: {
+            title: "🧬 ثالث ثانوي - مستقبل الذكاء الاصطناعي",
+            questions: [
+                { text: "ما معنى 'الذكاء الاصطناعي التوليدي' (Generative AI)؟", options: ["إنشاء محتوى جديد مثل النصوص والصور", "تحليل البيانات", "تحسين الأداء", "تشفير المعلومات"], correct: 0 },
+                { text: "أي من هذه تطبيقات ChatGPT؟", options: ["محادثة ذكية", "تصميم مواقع", "تحرير الفيديو", "حماية الشبكات"], correct: 0 },
+                { text: "ماذا يعني مصطلح 'Big Data'؟", options: ["كميات ضخمة من البيانات تحتاج تحليل متقدم", "ملفات كبيرة", "قواعد بيانات فقط", "بيانات سريعة"], correct: 0 },
+                { text: "ما هي أخلاقيات الذكاء الاصطناعي؟", options: ["المبادئ التي تضمن استخدام AI بشكل مسؤول", "سرعة المعالجة", "قوانين البرمجة", "تصميم الروبوتات"], correct: 0 },
+                { text: "أي من هذه المجالات تستفيد من الذكاء الاصطناعي؟", options: ["الطب، التعليم، النقل", "الزراعة فقط", "الصناعة فقط", "لا شيء مما ذكر"], correct: 0 },
+                { text: "ما هو 'الذكاء الاصطناعي القوي' (Strong AI)؟", options: ["AI يمتلك وعياً وإدراكاً كالإنسان", "AI بسيط", "AI للألعاب", "AI للمحادثة"], correct: 0 },
+                { text: "ما هي 'الواقع المعزز' (AR)؟", options: ["دمج العناصر الافتراضية مع الواقع", "واقع افتراضي كامل", "ألعاب الفيديو", "الطباعة ثلاثية الأبعاد"], correct: 0 },
+                { text: "ما هو 'الروبوت الاجتماعي'؟", options: ["روبوت يتفاعل مع البشر", "روبوت صناعي", "روبوت للتنظيف", "روبوت للعب"], correct: 0 },
+                { text: "ما التحدي الأكبر للذكاء الاصطناعي في المستقبل؟", options: ["التحكم والسلامة", "سرعة المعالجة", "تكلفة الطاقة", "حجم البيانات"], correct: 0 },
+                { text: "أي شركة طورت ChatGPT؟", options: ["OpenAI", "Google", "Microsoft", "Facebook"], correct: 0 }
+            ]
+        }
+    };
+
+    // متغيرات الحالة
+    let currentStage = null;
+    let currentQuestions = [];
+    let userAnswers = [];      // -1 = لم يجب, 0..3 = اختيار
+    let questionStatus = [];   // null = لم يصحح, true = صحيح, false = خطأ
+    let totalScore = 0;
+    let competitionActive = false;
+    let compQuestions = null;
+    let compIndex = 0;
+    let compScore = 0;
+
+    // عناصر DOM
+    const homePage = document.getElementById('homePage');
+    const quizPage = document.getElementById('quizPage');
+    const stageTitleSpan = document.getElementById('stageTitle');
+    const questionsListDiv = document.getElementById('questionsList');
+    const quizScoreSpan = document.getElementById('quizScore');
+    const resetStageBtn = document.getElementById('resetStageBtn');
+    const startCompBtn = document.getElementById('startCompetitionBtn');
+    const compResultArea = document.getElementById('compResultArea');
+    const backHomeBtn = document.getElementById('backHomeBtn');
+
+    // تحديث عرض النقاط
+    function updateScoreDisplay() {
+        quizScoreSpan.innerHTML = `⭐ النقاط: ${totalScore}`;
+    }
+
+    // عرض الأسئلة للمرحلة الحالية
+    function renderQuestions() {
+        if (!currentQuestions.length) return;
+        let html = '';
+        currentQuestions.forEach((q, idx) => {
+            const selectedIdx = userAnswers[idx];
+            const status = questionStatus[idx];
+            let feedbackHtml = '';
+            if (status !== null) {
+                const isCorrect = (status === true);
+                feedbackHtml = `<div class="feedback ${isCorrect ? 'correct' : 'wrong'}">
+                                    ${isCorrect ? '✅ إجابة صحيحة!' : '❌ إجابة خاطئة! الإجابة الصحيحة: ' + q.options[q.correct]}
+                                </div>`;
+            }
+            let optionsHtml = '';
+            q.options.forEach((opt, optIdx) => {
+                const isSelected = (selectedIdx === optIdx);
+                const selectedClass = isSelected ? 'selected' : '';
+                optionsHtml += `
+                    <div class="option-item ${selectedClass}" data-qidx="${idx}" data-optidx="${optIdx}">
+                        <div class="opt-letter">${String.fromCharCode(65+optIdx)}</div>
+                        <div>${opt}</div>
+                    </div>
+                `;
+            });
+            html += `
+                <div class="question-card" id="qcard-${idx}">
+                    <div class="question-text">
+                        <span class="q-num">${idx+1}</span>
+                        <span>${q.text}</span>
+                    </div>
+                    <div class="options-list" id="options-${idx}">
+                        ${optionsHtml}
+                    </div>
+                    ${feedbackHtml}
+                    <button class="check-btn" data-qidx="${idx}">✔ تحقق من الإجابة</button>
+                </div>
+            `;
+        });
+        questionsListDiv.innerHTML = html;
+
+        // إضافة مستمعي الأحداث للخيارات
+        document.querySelectorAll('.option-item').forEach(opt => {
+            opt.addEventListener('click', (e) => {
+                const qidx = parseInt(opt.dataset.qidx);
+                const optidx = parseInt(opt.dataset.optidx);
+                if (questionStatus[qidx] !== null) {
+                    alert('لقد أجبت على هذا السؤال بالفعل! استخدم "إعادة الاختبار" للمراجعة.');
+                    return;
+                }
+                userAnswers[qidx] = optidx;
+                renderQuestions(); // إعادة رسم لتحديث التحديد
+            });
+        });
+
+        // إضافة مستمعي الأحداث لأزرار التحقق
+        document.querySelectorAll('.check-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const qidx = parseInt(btn.dataset.qidx);
+                if (questionStatus[qidx] !== null) {
+                    alert('تم تصحيح هذا السؤال مسبقاً');
+                    return;
+                }
+                const selected = userAnswers[qidx];
+                if (selected === -1) {
+                    alert('يرجى اختيار إجابة أولاً');
+                    return;
+                }
+                const isCorrect = (selected === currentQuestions[qidx].correct);
+                questionStatus[qidx] = isCorrect;
+                if (isCorrect) totalScore += 10;
+                updateScoreDisplay();
+                renderQuestions();
+                // تمرير تلقائي للسؤال التالي
+                const nextCard = document.getElementById(`qcard-${qidx+1}`);
+                if (nextCard) nextCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            });
+        });
+    }
+
+    // تحميل فصل معين
+    function loadStage(stageId) {
+        currentStage = stageId;
+        const data = questionsDB[stageId];
+        if (!data) return;
+        stageTitleSpan.innerHTML = data.title;
+        currentQuestions = data.questions.map(q => ({ ...q }));
+        userAnswers = new Array(currentQuestions.length).fill(-1);
+        questionStatus = new Array(currentQuestions.length).fill(null);
+        totalScore = 0;
+        competitionActive = false;
+        compQuestions = null;
+        compResultArea.innerHTML = '';
+        updateScoreDisplay();
+        renderQuestions();
+        // إعادة تمكين زر المسابقة
+        startCompBtn.disabled = false;
+        startCompBtn.textContent = '🏆 ابدأ المسابقة (بعد إكمال الأسئلة)';
+        // إظهار صفحة الأسئلة وإخفاء الرئيسية
+        homePage.style.display = 'none';
+        quizPage.style.display = 'block';
+    }
+
+    // إعادة تعيين الاختبار للمرحلة الحالية
+    function resetCurrentStage() {
+        if (!currentStage) return;
+        const data = questionsDB[currentStage];
+        if (!data) return;
+        currentQuestions = data.questions.map(q => ({ ...q }));
+        userAnswers = new Array(currentQuestions.length).fill(-1);
+        questionStatus = new Array(currentQuestions.length).fill(null);
+        totalScore = 0;
+        competitionActive = false;
+        compQuestions = null;
+        compResultArea.innerHTML = '';
+        updateScoreDisplay();
+        renderQuestions();
+        startCompBtn.disabled = false;
+        startCompBtn.textContent = '🏆 ابدأ المسابقة (بعد إكمال الأسئلة)';
+    }
+
+    // المسابقة: 3 أسئلة عشوائية من نفس المرحلة
+    function startCompetition() {
+        if (competitionActive) {
+            alert('المسابقة جارية بالفعل!');
+            return;
+        }
+        const allAnswered = questionStatus.every(st => st !== null);
+        if (!allAnswered) {
+            alert('⚠️ يجب أن تجيب على جميع أسئلة المرحلة أولاً ثم تبدأ المسابقة.');
+            return;
+        }
+        const original = questionsDB[currentStage].questions;
+        let shuffled = [...original];
+        for (let i = shuffled.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+        }
+        const compQ = shuffled.slice(0, 3).map(q => ({ ...q }));
+        if (compQ.length === 0) {
+            compResultArea.innerHTML = 'لا توجد أسئلة للمسابقة';
+            return;
+        }
+        competitionActive = true;
+        compQuestions = compQ;
+        compIndex = 0;
+        compScore = 0;
+        showCompetitionQuestion();
+    }
+
+    function showCompetitionQuestion() {
+        if (!compQuestions || compIndex >= compQuestions.length) {
+            const finalMsg = `🎉 انتهت المسابقة! حصلت على ${compScore} من ${compQuestions.length*10} نقاط إضافية 🎉<br> إجمالي النقاط النهائي: ${totalScore + compScore}`;
+            compResultArea.innerHTML = `<strong>${finalMsg}</strong> <br> 🏅 يمكنك إعادة الاختبار أو اختيار فصل آخر.`;
+            competitionActive = false;
+            startCompBtn.disabled = false;
+            startCompBtn.textContent = '🏆 ابدأ المسابقة (بعد إكمال الأسئلة)';
+            totalScore += compScore;
+            updateScoreDisplay();
+            renderQuestions();
+            return;
+        }
+        const q = compQuestions[compIndex];
+        let compHtml = `
+            <div style="background:white; border-radius:28px; padding:18px; margin-top:12px; border:2px solid #ffb347;">
+                <h4>سؤال المسابقة ${compIndex+1}/3 : ${q.text}</h4>
+                <div class="options-list" id="compOptionsList">
+        `;
+        q.options.forEach((opt, idx) => {
+            compHtml += `<div class="option-item" data-compopt="${idx}"><div class="opt-letter">${String.fromCharCode(65+idx)}</div> ${opt}</div>`;
+        });
+        compHtml += `</div><button id="submitCompAnswer" class="check-btn" style="margin-top:12px;">تأكيد الإجابة</button></div>`;
+        compResultArea.innerHTML = compHtml;
+        let selectedComp = -1;
+        document.querySelectorAll('#compOptionsList .option-item').forEach(opt => {
+            opt.addEventListener('click', (e) => {
+                const val = parseInt(opt.dataset.compopt);
+                selectedComp = val;
+                document.querySelectorAll('#compOptionsList .option-item').forEach(o => o.classList.remove('selected'));
+                opt.classList.add('selected');
+            });
+        });
+        const submitBtn = document.getElementById('submitCompAnswer');
+        if (submitBtn) {
+            submitBtn.addEventListener('click', () => {
+                if (selectedComp === -1) {
+                    alert('اختر إجابة للمسابقة!');
+                    return;
+                }
+                const isCorrect = (selectedComp === q.correct);
+                if (isCorrect) compScore += 10;
+                compIndex++;
+                const feedbackMsg = isCorrect ? '✅ إجابة صحيحة! +10 نقاط' : `❌ خطأ! الإجابة الصحيحة: ${q.options[q.correct]}`;
+                compResultArea.innerHTML = `<div class="feedback ${isCorrect ? 'correct' : 'wrong'}">${feedbackMsg}</div>`;
+                setTimeout(() => {
+                    if (compIndex < compQuestions.length) showCompetitionQuestion();
+                    else showCompetitionQuestion();
+                }, 1200);
+            });
+        }
+    }
+
+    // العودة إلى الصفحة الرئيسية
+    function goHome() {
+        homePage.style.display = 'block';
+        quizPage.style.display = 'none';
+        currentStage = null;
+    }
+
+    // أحداث
+    resetStageBtn.addEventListener('click', resetCurrentStage);
+    startCompBtn.addEventListener('click', startCompetition);
+    backHomeBtn.addEventListener('click', goHome);
+
+    // اختيار الفصل من الصفحة الرئيسية
+    document.querySelectorAll('.class-card').forEach(card => {
+        card.addEventListener('click', () => {
+            const stage = card.dataset.stage;
+            if (stage) loadStage(stage);
+        });
+    });
+</script>
+</body>
+</html>
